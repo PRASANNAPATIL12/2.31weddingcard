@@ -1,0 +1,111 @@
+{
+  "d9b3991d-47eb-45d1-af0b-d193e1cbfa40": {
+    "id": "d9b3991d-47eb-45d1-af0b-d193e1cbfa40",
+    "user_id": "695521d9-2830-4df9-8647-c0e6f37fbee4",
+    "couple_name_1": "Emma",
+    "couple_name_2": "James",
+    "wedding_date": "2025-08-15",
+    "venue_name": "Sunset Garden Estate",
+    "venue_location": "Napa Valley, California",
+    "their_story": "We met at a coffee shop on a rainy Tuesday morning. Emma was reading her favorite book while James was working on his laptop. When James accidentally spilled coffee, Emma offered to help clean up. That small gesture led to hours of conversation and the beginning of our beautiful love story.",
+    "schedule_events": [],
+    "gallery_photos": [],
+    "bridal_party": [],
+    "groom_party": [],
+    "faqs": [],
+    "theme": "classic",
+    "created_at": "2025-09-10 16:19:37.261521",
+    "updated_at": "2025-09-10 16:19:37.261524"
+  },
+  "cb7a5246-250a-452f-b3a2-8e1bc8321bb6": {
+    "couple_name_1": "Emma Wilson",
+    "couple_name_2": "James Anderson",
+    "wedding_date": "2025-08-15",
+    "venue_name": "Updated Sunset Garden Estate",
+    "venue_location": "456 Updated Wedding Lane, Romance City",
+    "their_story": "Updated: Emma and James met at a coffee shop and have been inseparable ever since.",
+    "theme": "rustic",
+    "updated_at": "2025-09-11 15:00:20.807793",
+    "user_id": "11e356fe-e27a-4277-89c7-a6e409400387",
+    "id": "cb7a5246-250a-452f-b3a2-8e1bc8321bb6"
+  },
+  "3ff53ac4-f15d-42bf-957b-ae6c37b2b63d": {
+    "couple_name_1": "Emma Wilson",
+    "couple_name_2": "James Anderson",
+    "wedding_date": "2025-08-15",
+    "venue_name": "Updated Sunset Garden Estate",
+    "venue_location": "456 Updated Wedding Lane, Romance City",
+    "their_story": "Updated: Emma and James met at a coffee shop and have been inseparable ever since.",
+    "theme": "rustic",
+    "updated_at": "2025-09-11 15:00:37.503384",
+    "user_id": "38908562-6567-4d0d-af8e-4fd134a11353",
+    "id": "3ff53ac4-f15d-42bf-957b-ae6c37b2b63d"
+  },
+  "f3acf7b2-63bd-4a86-b13a-c9d193175be4": {
+    "couple_name_1": "Emma Wilson",
+    "couple_name_2": "James Anderson",
+    "wedding_date": "2025-08-15",
+    "venue_name": "Updated Sunset Garden Estate",
+    "venue_location": "456 Updated Wedding Lane, Romance City",
+    "their_story": "Updated: Emma and James met at a coffee shop and have been inseparable ever since.",
+    "theme": "rustic",
+    "updated_at": "2025-09-12 17:53:36.121786",
+    "user_id": "a5ca2654-a776-41e0-b43c-4842a74d9f68",
+    "id": "f3acf7b2-63bd-4a86-b13a-c9d193175be4"
+  },
+  "379ae945-f671-49f9-be88-de2fdf1f23af": {
+    "couple_name_1": "Emma Wilson",
+    "couple_name_2": "James Anderson",
+    "wedding_date": "2025-08-15",
+    "venue_name": "Updated Sunset Garden Estate",
+    "venue_location": "456 Updated Wedding Lane, Romance City",
+    "their_story": "Updated: Emma and James met at a coffee shop and have been inseparable ever since.",
+    "theme": "rustic",
+    "updated_at": "2025-09-12 19:55:35.255879",
+    "user_id": "ca8f7096-e568-40da-98da-02bb45bcb36d",
+    "id": "379ae945-f671-49f9-be88-de2fdf1f23af"
+  },
+  "ff74f71e-e7a7-414c-b36b-3940e8c5c0a6": {
+    "id": "ff74f71e-e7a7-414c-b36b-3940e8c5c0a6",
+    "user_id": "fb2403e9-9e05-4c51-895b-4173f6fc9d7e",
+    "couple_name_1": "Sridhar",
+    "couple_name_2": "Sneha",
+    "wedding_date": "2025-12-25",
+    "venue_name": "Garden Palace",
+    "venue_location": "Garden Palace \u2022 Bangalore, India",
+    "their_story": "We fell in love during college and have been together for 5 amazing years. Now we are ready to take the next step!",
+    "schedule_events": [
+      {
+        "time": "4:00 PM",
+        "title": "Wedding Ceremony",
+        "description": "Join us as we exchange vows in a traditional ceremony",
+        "location": "Garden Palace Main Hall",
+        "highlight": true
+      }
+    ],
+    "gallery_photos": [],
+    "bridal_party": [],
+    "groom_party": [],
+    "faqs": [],
+    "theme": "classic",
+    "custom_url": "sridhar-sneha-wedding",
+    "story_timeline": [],
+    "registry_items": [],
+    "honeymoon_fund": null,
+    "important_info": {},
+    "created_at": "2025-09-13 10:49:46.175690",
+    "updated_at": "2025-09-13 10:49:46.175693"
+  },
+  "8a120052-6f65-425b-a1da-5c7ec7276534": {
+    "couple_name_1": "Emma Wilson",
+    "couple_name_2": "James Anderson",
+    "wedding_date": "2025-08-15",
+    "venue_name": "Updated Sunset Garden Estate",
+    "venue_location": "456 Updated Wedding Lane, Romance City",
+    "their_story": "Updated: Emma and James met at a coffee shop and have been inseparable ever since.",
+    "theme": "rustic",
+    "updated_at": "2025-09-13 10:51:17.394581",
+    "user_id": "a97954b4-8ce4-4f53-9a50-8b81dbeaa5da",
+    "id": "8a120052-6f65-425b-a1da-5c7ec7276534"
+  }
+}
