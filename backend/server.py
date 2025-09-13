@@ -58,7 +58,7 @@ async def close_mongo_connection():
 
 # Database helper functions
 async def get_user_from_db(user_id: str):
-    if db:
+    if db is not None:
         try:
             user = await db.users.find_one({"id": user_id})
             return user
@@ -70,7 +70,7 @@ async def get_user_from_db(user_id: str):
     return users.get(user_id)
 
 async def save_user_to_db(user_data: dict):
-    if db:
+    if db is not None:
         try:
             await db.users.replace_one(
                 {"id": user_data["id"]}, 
@@ -88,7 +88,7 @@ async def save_user_to_db(user_data: dict):
     return True
 
 async def get_wedding_from_db(wedding_id: str = None, user_id: str = None, custom_url: str = None):
-    if db:
+    if db is not None:
         try:
             query = {}
             if wedding_id:
@@ -120,7 +120,7 @@ async def get_wedding_from_db(wedding_id: str = None, user_id: str = None, custo
     return None
 
 async def save_wedding_to_db(wedding_data: dict):
-    if db:
+    if db is not None:
         try:
             await db.weddings.replace_one(
                 {"id": wedding_data["id"]}, 
@@ -138,7 +138,7 @@ async def save_wedding_to_db(wedding_data: dict):
     return True
 
 async def get_all_users_from_db():
-    if db:
+    if db is not None:
         try:
             users = {}
             async for user in db.users.find():
