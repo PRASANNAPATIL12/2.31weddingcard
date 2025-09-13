@@ -4,18 +4,13 @@ import { Calendar, MapPin, Heart } from 'lucide-react';
 import LiquidBackground from '../components/LiquidBackground';
 import { useAppTheme } from '../App';
 import { useUserData } from '../contexts/UserDataContext';
-import { usePublicWeddingData } from './PublicWeddingPage';
 
 const HomePage = () => {
   const { themes, currentTheme } = useAppTheme();
   const theme = themes[currentTheme];
   
-  // Try to get data from UserDataContext first, then from PublicWeddingContext
-  const userData = useUserData();
-  const publicData = usePublicWeddingData();
-  
-  // Use public data if available, otherwise use user data
-  const weddingData = publicData.weddingData || userData.weddingData;
+  // Get wedding data from UserDataContext
+  const { weddingData } = useUserData();
   
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
