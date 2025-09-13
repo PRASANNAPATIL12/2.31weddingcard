@@ -209,24 +209,42 @@ const PublicWeddingPage = () => {
         // Fallback to localStorage if backend fails
         if (!foundWeddingData) {
           console.log('Trying localStorage fallback');
+          console.log('Identifier to search for:', identifier);
+          
           const storedUsers = localStorage.getItem('wedding_users');
+          console.log('Stored users from localStorage:', storedUsers);
+          
           if (storedUsers) {
             const users = JSON.parse(storedUsers);
+            console.log('Parsed users:', users);
             
             // Search for user by ID or custom URL
             for (const userId in users) {
+              console.log('Checking user ID:', userId);
               const userData = localStorage.getItem(`wedding_data_${userId}`);
+              console.log(`Wedding data for ${userId}:`, userData);
+              
               if (userData) {
                 const userWeddingData = JSON.parse(userData);
+                console.log('Parsed user wedding data:', userWeddingData);
+                console.log('Custom URL in data:', userWeddingData.custom_url);
                 
                 // Match by user ID or custom URL
                 if (userId === identifier || userWeddingData.custom_url === identifier) {
                   foundWeddingData = userWeddingData;
-                  console.log('Found wedding data in localStorage:', foundWeddingData);
+                  console.log('✅ MATCH FOUND! Found wedding data in localStorage:', foundWeddingData);
                   break;
+                } else {
+                  console.log(`❌ No match: ${userId} !== ${identifier} && ${userWeddingData.custom_url} !== ${identifier}`);
                 }
               }
             }
+          } else {
+            console.log('❌ No users found in localStorage');
+          }
+          
+          if (!foundWeddingData) {
+            console.log('❌ No matching wedding data found in localStorage');
           }
         }
       }
