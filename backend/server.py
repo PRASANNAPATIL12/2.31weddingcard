@@ -239,26 +239,13 @@ def get_current_user_simple(session_id: str = None):
         )
     
     session = active_sessions[session_id]
-    users = load_json_file(USERS_FILE)
-    
-    user_data = None
-    for user_id, user_info in users.items():
-        if user_id == session["user_id"]:
-            user_data = user_info
-            break
-    
-    if not user_data:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User not found"
-        )
-    
-    return User(**user_data)
+    # This will be handled as async in the route functions
+    return session["user_id"]
 
 # Auth Routes - Simple String Comparison
 @api_router.post("/auth/register", response_model=AuthResponse)
 async def register(user_data: UserRegister):
-    users = load_json_file(USERS_FILE)
+    users = await get_all_users_from_db()
     
     # Check if user already exists (simple string comparison)
     for user_id, user_info in users.items():
@@ -274,9 +261,8 @@ async def register(user_data: UserRegister):
         password=user_data.password  # Store plain text password (naive approach)
     )
     
-    # Save to JSON file
-    users[user.id] = user.dict()
-    save_json_file(USERS_FILE, users)
+    # Save to database
+    await save_user_to_db(user.dict())
     
     # Create simple session
     session_id = create_simple_session(user.id)
@@ -290,7 +276,7 @@ async def register(user_data: UserRegister):
 
 @api_router.post("/auth/login", response_model=AuthResponse)
 async def login(user_data: UserLogin):
-    users = load_json_file(USERS_FILE)
+    users = await get_all_users_from_db()
     
     # Simple string comparison authentication
     for user_id, user_info in users.items():
