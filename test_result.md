@@ -103,135 +103,110 @@
 #====================================================================================================
 
 ## user_problem_statement: 
-Clone github repo https://github.com/PRASANNAPATIL12/2.2weddingcard.git and implement dashboard reorganization features. User requested to: 1) Move share options (WhatsApp, Gmail, QR Code, Get URL) up to same level as edit sections, 2) Remove "save changes" and "preview" sections, 3) Enhance "Get URL" with custom route functionality, 4) Enhance "Get QR Code" with different formats and download options, 5) Keep all existing design and responsiveness exactly the same.
+Clone github repo https://github.com/PRASANNAPATIL12/2.31weddingcard.git and fix personalization issue where public URLs (like /sridharandsneha) show default data (Sarah & Michael) instead of personalized data (Sridhar & Sneha). User wants public URLs to display the full wedding website with all navigation, features, and floating button - exactly like the main site but with personalized data. The solution should use MongoDB to store and retrieve personalized wedding data for public access.
 
 ## backend:
-  - task: "Simple localStorage Authentication System"
+  - task: "MongoDB Integration for Wedding Data Storage"
     implemented: true
     working: true
-    file: "N/A - localStorage only as requested"
+    file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
         -working: true
         -agent: "main"
-        -comment: "Implemented simple string comparison authentication using localStorage as requested by user. No backend complexity needed."
+        -comment: "✅ SUCCESSFULLY IMPLEMENTED: Updated backend to use MongoDB with user's connection string. Added proper MongoDB client setup, document serialization for ObjectId handling, and enhanced error handling with JSON fallback. All API endpoints now work with both MongoDB and JSON file storage."
+
+  - task: "Public Wedding Data API by Custom URL"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: true
+        -agent: "main"
+        -comment: "✅ SUCCESSFULLY FIXED: Enhanced /api/wedding/public/custom/{custom_url} endpoint with proper MongoDB querying and JSON serialization. API now correctly retrieves and returns personalized wedding data by custom URL. Tested with curl: returns Sridhar & Sneha data for /sridharandsneha URL."
+
+  - task: "Database Connection and Environment Setup"
+    implemented: true
+    working: true
+    file: "/app/backend/.env"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: true
+        -agent: "main"
+        -comment: "✅ CONFIRMED WORKING: Using user's MongoDB Atlas connection string (mongodb+srv://prasannagoudasp12_db_user:RVj1n8gEkHewSwIL@cluster0.euowph1.mongodb.net/) with database name 'weddingcard'. Connection established successfully with fallback to JSON files."
 
 ## frontend:
-  - task: "Dashboard Sidebar Reorganization"
+  - task: "PublicWeddingPage Personalization Fix"
     implemented: true
     working: true
-    file: "/app/frontend/src/components/LeftSidebar.js"
+    file: "/app/frontend/src/pages/PublicWeddingPage.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
         -working: true
         -agent: "main"
-        -comment: "✅ COMPLETED: Reorganized sidebar sections to move premium features (WhatsApp, Gmail, QR Code, Get URL, AI) to main navigation level. Removed separate 'Save Changes' and 'Preview' sections as requested. All features now have equal visual importance with colored icons."
+        -comment: "✅ SUCCESSFULLY FIXED: PublicWeddingPage now correctly loads personalized data from MongoDB via backend API. Enhanced debugging shows 'Found wedding data by custom URL' and 'Final wedding data set' with correct Sridhar & Sneha data. Public URLs now display personalized content instead of default Sarah & Michael data."
 
-  - task: "Public URL System Implementation"
+  - task: "Full Website Experience on Public URLs"
     implemented: true
     working: true
-    file: "/app/frontend/src/pages/PublicWeddingPage.js, /app/frontend/src/App.js"
+    file: "/app/frontend/src/pages/PublicWeddingPage.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         -working: true
         -agent: "main"
-        -comment: "✅ COMPLETED: Created comprehensive public URL system. Custom URLs (like /sarah-michael-wedding) now display user's personalized wedding data to visitors. Modified PublicWeddingPage to load user data from localStorage based on custom URL or user ID. Added catch-all route for custom URLs."
+        -comment: "✅ CONFIRMED WORKING: Public URLs display complete wedding website with all navigation (Home, Our Story, RSVP, Schedule, Gallery, Wedding Party, Registry, Guestbook, FAQ), floating template button, and full responsiveness - exactly as requested. All features preserved while showing personalized data."
 
-  - task: "Custom URL Feature Implementation"
+  - task: "Import Error Fix in HomePage.js"
     implemented: true
     working: true
-    file: "/app/frontend/src/components/LeftSidebar.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: true
-    status_history:
-        -working: true
-        -agent: "main"
-        -comment: "✅ COMPLETED: Created CustomUrlForm component with URL suggestions based on couple names, real-time preview, copy functionality, and localStorage persistence. WhatsApp and Gmail sharing now use custom URLs when available."
-
-  - task: "Enhanced QR Code Generator"
-    implemented: true
-    working: true
-    file: "/app/frontend/src/components/LeftSidebar.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: true
-    status_history:
-        -working: true
-        -agent: "main"
-        -comment: "✅ COMPLETED: Created QRCodeGeneratorForm with 4 size options (200x200 to 800x800), 4 color themes, live preview, bulk download options, and print functionality. QR codes link to custom URLs when available. Fixed auto-closing issue by improving click-outside detection."
-
-  - task: "Enhanced Sidebar Hover Behavior"
-    implemented: true
-    working: true
-    file: "/app/frontend/src/components/LeftSidebar.js"
-    stuck_count: 0
-    priority: "medium"
-    needs_retesting: true
-    status_history:
-        -working: true
-        -agent: "main"
-        -comment: "✅ COMPLETED: Modified hover behavior as requested - sidebar expands on hover and stays open when mouse leaves, only closes when clicking outside the sidebar area. Enhanced for better user experience."
-
-  - task: "Mobile Responsiveness Enhancement"
-    implemented: true
-    working: true
-    file: "/app/frontend/src/components/LeftSidebar.js"
-    stuck_count: 0
-    priority: "medium"
-    needs_retesting: true
-    status_history:
-        -working: true
-        -agent: "main"
-        -comment: "✅ COMPLETED: Enhanced mobile experience with more translucent sidebar background, touch-friendly interactions, click-to-open behavior on mobile, and better responsive sizing (16px on mobile vs 20px on desktop)."
-
-  - task: "UserDataContext Custom URL Support"
-    implemented: true
-    working: true
-    file: "/app/frontend/src/contexts/UserDataContext.js"
+    file: "/app/frontend/src/pages/HomePage.js"
     stuck_count: 0
     priority: "medium"
     needs_retesting: false
     status_history:
         -working: true
         -agent: "main"
-        -comment: "✅ COMPLETED: Added custom_url field to defaultWeddingData structure to support custom URL functionality."
+        -comment: "✅ FIXED: Removed non-existent usePublicWeddingData import that was causing compilation errors. HomePage now properly imports and uses useUserData from UserDataContext. Application loads without errors."
 
-  - task: "Environment Setup and Dependencies"
+  - task: "Dependency Installation and Setup"
     implemented: true
     working: true
-    file: "/app/backend/.env, /app/frontend/.env"
+    file: "/app/frontend/package.json, /app/backend/requirements.txt"
     stuck_count: 0
     priority: "medium"
     needs_retesting: false
     status_history:
         -working: true
         -agent: "main"
-        -comment: "✅ COMPLETED: Set up environment variables as requested. Backend uses MongoDB localhost:27017, frontend uses localhost:8001 backend URL. All services running successfully."
+        -comment: "✅ COMPLETED: Installed all frontend dependencies via yarn install and verified backend dependencies. All services running correctly via supervisorctl. React app builds and serves without errors."
 
 ## metadata:
   created_by: "main_agent"
-  version: "1.0"
-  test_sequence: 0
-  run_ui: false
+  version: "2.0"
+  test_sequence: 1
+  run_ui: true
 
 ## test_plan:
   current_focus:
-    - "Test dashboard sidebar reorganization: premium features now at main level"
-    - "Test custom URL functionality: URL generation, suggestions, preview, save"
-    - "Test enhanced QR code generator: different formats, colors, download options"
-    - "Test responsiveness: ensure all new features work on mobile devices"
-    - "Test user authentication flow with new dashboard layout"
+    - "Test complete user registration and personalization flow"
+    - "Verify public URL sharing works with actual user-generated custom URLs"
+    - "Confirm MongoDB data persistence across sessions"
+    - "Test responsiveness and all navigation features on public URLs"
   stuck_tasks: []
   test_all: true
   test_priority: "high_first"
 
 ## agent_communication:
     -agent: "main"
-    -message: "🎉 SUCCESSFULLY IMPLEMENTED ALL PREMIUM ENHANCEMENTS! Features completed: 1) ✅ Dashboard reorganization - moved all share features to main level with equal importance, 2) ✅ Public URL system - custom URLs now display user's personalized data to visitors, 3) ✅ Enhanced Custom URL generator with smart suggestions and preview, 4) ✅ Advanced QR Code generator with 4 sizes, 4 themes, and download options, 5) ✅ Fixed sidebar hover behavior - stays open until clicked outside, 6) ✅ Enhanced mobile responsiveness with translucent design, 7) ✅ Fixed QR form auto-closing issue with improved click detection. All features integrate seamlessly with existing design and localStorage. Both custom URLs and QR codes link to personalized wedding data. Ready for user testing and validation."
+    -message: "🎉 CRITICAL ISSUE COMPLETELY RESOLVED! The personalization problem has been successfully fixed. Key achievements: 1) ✅ MongoDB Integration: Backend now uses user's MongoDB Atlas connection with proper document serialization and fallback to JSON files. 2) ✅ Public URL Fix: Custom URLs like /sridharandsneha now correctly display personalized data (Sridhar & Sneha) instead of default data (Sarah & Michael). 3) ✅ API Working: /api/wedding/public/custom/{custom_url} endpoint successfully retrieves and returns personalized wedding data from MongoDB. 4) ✅ Full Website Experience: Public URLs show complete wedding website with all navigation, floating button, and features exactly as requested. 5) ✅ Console Logs Confirm: 'Found wedding data by custom URL' and 'Final wedding data set' show correct personalized data loading. The core issue reported by the user has been completely resolved - visitors clicking on shared custom URLs now see the personalized wedding invitation with correct names, dates, venues, and all custom content."
