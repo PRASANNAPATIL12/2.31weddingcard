@@ -11,6 +11,7 @@ from datetime import datetime
 import json
 from motor.motor_asyncio import AsyncIOMotorClient
 import asyncio
+from bson import ObjectId
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -26,6 +27,28 @@ db = None
 # JSON file for fallback storage
 USERS_FILE = ROOT_DIR / 'users.json'
 WEDDINGS_FILE = ROOT_DIR / 'weddings.json'
+
+# Helper function to convert MongoDB documents to JSON serializable format
+def serialize_mongo_doc(doc):
+    if doc is None:
+        return None
+    
+    if isinstance(doc, dict):
+        result = {}
+        for key, value in doc.items():
+            if key == '_id':
+                continue  # Skip MongoDB _id field
+            elif isinstance(value, ObjectId):
+                result[key] = str(value)
+            elif isinstance(value, dict):
+                result[key] = serialize_mongo_doc(value)
+            elif isinstance(value, list):
+                result[key] = [serialize_mongo_doc(item) if isinstance(item, dict) else item for item in value]
+            else:
+                result[key] = value
+        return result
+    
+    return doc
 
 # Create the main app without a prefix
 app = FastAPI()
