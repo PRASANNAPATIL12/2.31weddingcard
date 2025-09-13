@@ -84,9 +84,9 @@ async def get_user_from_db(user_id: str):
     if db is not None:
         try:
             user = await db.users.find_one({"id": user_id})
-            return user
-        except:
-            pass
+            return serialize_mongo_doc(user)
+        except Exception as e:
+            print(f"Failed to get user from MongoDB: {e}")
     
     # Fallback to JSON
     users = load_json_file(USERS_FILE)
@@ -121,12 +121,15 @@ async def get_wedding_from_db(wedding_id: str = None, user_id: str = None, custo
             elif custom_url:
                 query["custom_url"] = custom_url
             
+            print(f"🔍 MongoDB query: {query}")
             wedding = await db.weddings.find_one(query)
-            return wedding
+            print(f"📋 MongoDB result: {wedding}")
+            return serialize_mongo_doc(wedding)
         except Exception as e:
             print(f"Failed to get wedding from MongoDB: {e}")
     
     # Fallback to JSON
+    print("📂 Falling back to JSON file search")
     weddings = load_json_file(WEDDINGS_FILE)
     
     if wedding_id:
@@ -136,9 +139,13 @@ async def get_wedding_from_db(wedding_id: str = None, user_id: str = None, custo
             if w_data.get("user_id") == user_id:
                 return w_data
     elif custom_url:
+        print(f"🔍 Searching JSON for custom_url: {custom_url}")
         for w_id, w_data in weddings.items():
+            print(f"📋 Checking wedding {w_id}: custom_url = {w_data.get('custom_url')}")
             if w_data.get("custom_url") == custom_url:
+                print(f"✅ Found match in JSON!")
                 return w_data
+        print(f"❌ No match found in JSON")
     
     return None
 
@@ -150,11 +157,13 @@ async def save_wedding_to_db(wedding_data: dict):
                 wedding_data, 
                 upsert=True
             )
+            print(f"✅ Wedding saved to MongoDB: {wedding_data['id']}")
             return True
         except Exception as e:
             print(f"Failed to save wedding to MongoDB: {e}")
     
     # Fallback to JSON
+    print(f"💾 Saving wedding to JSON file: {wedding_data['id']}")
     weddings = load_json_file(WEDDINGS_FILE)
     weddings[wedding_data["id"]] = wedding_data
     save_json_file(WEDDINGS_FILE, weddings)
@@ -165,10 +174,11 @@ async def get_all_users_from_db():
         try:
             users = {}
             async for user in db.users.find():
-                users[user["id"]] = user
+                serialized_user = serialize_mongo_doc(user)
+                users[serialized_user["id"]] = serialized_user
             return users
-        except:
-            pass
+        except Exception as e:
+            print(f"Failed to get users from MongoDB: {e}")
     
     # Fallback to JSON
     return load_json_file(USERS_FILE)
