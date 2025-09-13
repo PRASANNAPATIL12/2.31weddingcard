@@ -460,7 +460,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Startup event to connect to MongoDB
+@app.on_event("startup")
+async def startup_event():
+    await connect_to_mongo()
+
 # Simple cleanup on shutdown
 @app.on_event("shutdown")
 async def cleanup():
     active_sessions.clear()
+    await close_mongo_connection()
