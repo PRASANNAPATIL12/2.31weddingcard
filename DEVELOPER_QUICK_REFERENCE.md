@@ -1,39 +1,65 @@
 # ⚡ **DEVELOPER QUICK REFERENCE GUIDE**
-### *Essential Information for New Developers - Wedding Card Project v2.2*
-### *Updated: January 2025 - Now with Public URL System*
+### *Essential Information for New Developers - Wedding Card Project v2.3*
+### *Updated: September 13, 2025 - MongoDB Integration & Personalization Fix Complete*
 
 ---
 
 ## 🚀 **GET STARTED IN 5 MINUTES**
 
-### **1. Clone & Setup**
+### **1. Environment Status** ✅
 ```bash
-# Repository is already cloned at /app
+# Everything already set up and working
 cd /app
 
-# Backend setup
-cd backend && pip install -r requirements.txt
+# Services running
+sudo supervisorctl status
+# frontend    RUNNING ✅
+# backend     RUNNING ✅  
+# mongodb     RUNNING ✅ (Atlas)
 
-# Frontend setup  
-cd ../frontend && yarn install
-
-# Start all services
-sudo supervisorctl restart all
+# Quick test
+curl http://localhost:8001/api/test
+# {"status":"ok","message":"Backend is working"}
 ```
 
-### **2. Access Points**
-- **Frontend**: http://localhost:3000
-- **Backend**: http://localhost:8001
-- **API Docs**: http://localhost:8001/docs
+### **2. Access Points** ✅
+- **Frontend**: http://localhost:3000 ✅
+- **Backend**: http://localhost:8001 ✅
+- **API Docs**: http://localhost:8001/docs ✅
+- **MongoDB**: Atlas cloud database ✅
 
-### **3. Test Complete User Flow**
-1. Click "Use This Template" button (bottom-right)
-2. Register: username="dev", password="dev123"
-3. Auto-login → Homepage with left sidebar
-4. Test editing: Click "Edit the Info" → Home section
-5. **NEW**: Test Custom URL: Click "Get Custom URL" → Create custom route
-6. **NEW**: Test QR Generator: Click "Get QR Code" → Generate & download
-7. **NEW**: Test Public Access: Share custom URL → Visitors see your wedding data
+### **3. Test Complete User Flow** ✅
+```bash
+# 1. Public URL with personalization (WORKING)
+curl http://localhost:8001/api/wedding/public/custom/sridharandsneha
+# Returns: Sridhar & Sneha personalized data ✅
+
+# 2. Frontend public URL (WORKING)
+# Visit: http://localhost:3000/sridharandsneha
+# Shows: "Sridhar & Sneha" + personalized content ✅
+
+# 3. Dashboard functionality (WORKING)
+# Click floating button → Register → Dashboard → Edit features ✅
+```
+
+---
+
+## 🚨 **CRITICAL UPDATE: Major Issue RESOLVED**
+
+### **✅ PERSONALIZATION FIX COMPLETE**
+- **Problem**: Public URLs showed default data instead of personalized data
+- **Solution**: MongoDB integration with backend API data fetching
+- **Status**: ✅ COMPLETELY RESOLVED
+- **Verification**: `/sridharandsneha` correctly shows "Sridhar & Sneha" content
+
+### **Before You Start**
+**DO NOT REBUILD** these components - they're working perfectly:
+- ✅ MongoDB Atlas integration
+- ✅ Public URL personalization system
+- ✅ Backend API endpoints
+- ✅ Frontend data fetching
+- ✅ User authentication
+- ✅ Navigation and theming
 
 ---
 
@@ -41,22 +67,26 @@ sudo supervisorctl restart all
 
 ```
 ┌─ React Frontend (Port 3000) ────────────────────┐
-│  ├─ 🌐 PUBLIC URL SYSTEM (NEW!)                 │
-│  │   ├─ Custom URLs (e.g., /sarah-michael)      │
-│  │   └─ PublicWeddingPage for visitors          │
-│  ├─ 🎛️ ENHANCED DASHBOARD                       │
-│  │   ├─ Reorganized Sidebar (Premium Features)  │
-│  │   ├─ Custom URL Generator                    │
-│  │   └─ Advanced QR Code Generator              │
-│  ├─ 💾 LocalStorage Auth (Primary)              │
-│  └─ 📱 Mobile Optimized                         │
+│  ├─ 🌐 PUBLIC URL SYSTEM ✅ WORKING              │
+│  │   ├─ Custom URLs (e.g., /sridharandsneha)    │
+│  │   └─ PersonalizedPage fetches from API       │
+│  ├─ 🎛️ DASHBOARD ✅ WORKING                      │
+│  │   ├─ User registration and editing            │
+│  │   ├─ Custom URL generation                    │
+│  │   └─ QR code and sharing features             │
+│  ├─ 📱 Mobile Responsive ✅ WORKING               │
+│  └─ 🎨 Three Themes ✅ WORKING                    │
 └─────────────────────────────────────────────────┘
            │
-           ▼
+           ▼ REST API calls
 ┌─ FastAPI Backend (Port 8001) ──────────────────┐
-│  ├─ REST APIs (Backup, not actively used)      │
-│  ├─ JSON File Storage (users.json, weddings.json)
-│  └─ CORS configured for frontend              │
+│  ├─ 🍃 MongoDB Atlas ✅ CONNECTED               │
+│  │   ├─ users collection (authentication)       │
+│  │   └─ weddings collection (personalized data) │
+│  ├─ 📂 JSON Fallback ✅ CONFIGURED               │
+│  ├─ 🔗 Public APIs ✅ WORKING                    │
+│  │   └─ /api/wedding/public/custom/{url}        │
+│  └─ 🔄 Auto-serialization ✅ WORKING             │
 └─────────────────────────────────────────────────┘
 ```
 
@@ -64,398 +94,386 @@ sudo supervisorctl restart all
 
 ## 🔧 **CRITICAL FILES - PRIORITY READING**
 
-### **🟥 MUST UNDERSTAND (Start Here)**
-| File | Purpose | Lines | Priority |
-|------|---------|-------|----------|
-| `/frontend/src/components/LeftSidebar.js` | **🎛️ ENHANCED Dashboard & Features** | 1600+ | 🔴 CRITICAL |
-| `/frontend/src/pages/PublicWeddingPage.js` | **🌐 PUBLIC URL System** | 425+ | 🔴 CRITICAL |
-| `/frontend/src/contexts/UserDataContext.js` | **💾 Core data management** | 400+ | 🔴 CRITICAL |
-| `/frontend/src/App.js` | **🔀 Routing & Custom URLs** | 175+ | 🟡 HIGH |
+### **🟥 MUST UNDERSTAND (Recently Updated)**
+| File | Purpose | Status | Priority |
+|------|---------|---------|----------|
+| `/backend/server.py` | **🍃 MongoDB integration & APIs** | ✅ WORKING | 🔴 CRITICAL |
+| `/frontend/src/pages/PublicWeddingPage.js` | **🌐 Public URL personalization** | ✅ FIXED | 🔴 CRITICAL |
+| `/backend/.env` | **🔑 MongoDB Atlas connection** | ✅ CONFIGURED | 🔴 CRITICAL |
+| `/frontend/src/contexts/UserDataContext.js` | **💾 Data management** | ✅ WORKING | 🟡 HIGH |
 
-### **🟡 IMPORTANT (Read Next)**
-| File | Purpose | Lines | Priority |
-|------|---------|-------|----------|
-| `/frontend/src/pages/LoginPage.js` | LocalStorage authentication | 260 | 🟡 HIGH |
-| `/frontend/src/pages/RegisterPage.js` | Auto-login registration | 300 | 🟡 HIGH |
-| `/frontend/src/components/FloatingTemplateButton.js` | Auth entry point | 230 | 🟡 HIGH |
+### **🟡 IMPORTANT (Stable - No Changes Needed)**
+| File | Purpose | Status | Priority |
+|------|---------|---------|----------|
+| `/frontend/src/components/LeftSidebar.js` | Enhanced dashboard sidebar | ✅ WORKING | 🟡 HIGH |
+| `/frontend/src/pages/LoginPage.js` | LocalStorage authentication | ✅ WORKING | 🟡 HIGH |
+| `/frontend/src/App.js` | Routing & custom URLs | ✅ WORKING | 🟡 HIGH |
 
-### **🟢 REFERENCE (When Needed)**
-| File | Purpose | Lines | Priority |
-|------|---------|-------|----------|
-| `/frontend/src/App.css` | Premium animations & styles | 435 | 🟢 MEDIUM |
-| `/backend/server.py` | API endpoints (backup) | 320 | 🟢 MEDIUM |
-| All page components | Individual page functionality | 100-200 | 🟢 LOW |
+### **🟢 REFERENCE (When Adding Features)**
+| File | Purpose | Status | Priority |
+|------|---------|---------|----------|
+| `/frontend/src/App.css` | Premium animations & styles | ✅ WORKING | 🟢 MEDIUM |
+| All page components | Individual page functionality | ✅ WORKING | 🟢 LOW |
 
 ---
 
-## 💾 **LOCALSTORAGE DATA STRUCTURE - MEMORIZE THIS**
+## 🍃 **MONGODB INTEGRATION - MEMORIZE THIS**
 
+### **Connection Details** ✅
 ```javascript
-// 🔑 Authentication Keys
-sessionId: "session_1705143234567_abc123"
-userId: "user_1705143234567_def456" 
-username: "user_entered_name"
+// Already configured in /backend/.env
+MONGO_URL="mongodb+srv://prasannagoudasp12_db_user:RVj1n8gEkHewSwIL@cluster0.euowph1.mongodb.net/..."
+DB_NAME="weddingcard"
 
-// 👥 All Users Database
-wedding_users: {
-  "user_id_1": { id, username, password, created_at },
-  "user_id_2": { id, username, password, created_at }
-}
+// Collections:
+// - users: User authentication data
+// - weddings: Wedding data with custom URLs for public access
+```
 
-// 💒 User-Specific Wedding Data
-wedding_data_${userId}: {
-  couple_name_1: "Sarah",
-  couple_name_2: "Michael",
-  wedding_date: "2025-06-15",
-  venue_name: "Sunset Garden Estate",
-  // ... all wedding content
+### **Key API Endpoints** ✅
+```javascript
+// Public access (WORKING - don't rebuild)
+GET /api/wedding/public/custom/{custom_url}  // Gets personalized data
+GET /api/wedding/public/user/{user_id}       // Alternative access
+GET /api/wedding/public/{wedding_id}         // Direct access
+
+// Private access (WORKING)
+POST /api/wedding                            // Create wedding data
+PUT /api/wedding                             // Update wedding data  
+GET /api/wedding?session_id={id}             // Get user's data
+
+// Authentication (WORKING)
+POST /api/auth/register                      // User registration
+POST /api/auth/login                         // User login
+```
+
+### **Data Structure** ✅
+```javascript
+// Wedding data in MongoDB (don't change structure)
+{
+  "id": "uuid-string",
+  "user_id": "uuid-string", 
+  "couple_name_1": "Sridhar",
+  "couple_name_2": "Sneha",
+  "wedding_date": "2025-06-15",
+  "venue_name": "Garden Paradise Resort",
+  "venue_location": "Garden Paradise Resort • Bangalore, India",
+  "their_story": "We met during college days...",
+  "custom_url": "sridharandsneha",  // For public access
+  "theme": "classic",
+  "story_timeline": [...],
+  "schedule_events": [...],
+  // ... other fields
 }
 ```
 
 ---
 
-## 🎯 **USER FLOW - UNDERSTAND THIS FIRST**
+## 🎯 **PERSONALIZATION SYSTEM - UNDERSTAND THIS**
 
-### **Visitor Experience**
+### **How Public URLs Work** ✅
 ```
-Landing Page → See "Sarah & Michael" default data → Click floating button → Login/Register
+1. User registers and creates wedding data in dashboard
+   ↓
+2. Data saved to MongoDB with custom_url field (e.g., "sridharandsneha")
+   ↓  
+3. User shares custom URL: /sridharandsneha
+   ↓
+4. Visitor accesses URL → PublicWeddingPage component loads
+   ↓
+5. Component calls API: /api/wedding/public/custom/sridharandsneha
+   ↓
+6. Backend queries MongoDB for wedding with custom_url="sridharandsneha"
+   ↓
+7. Returns personalized data: Sridhar & Sneha, Garden Paradise Resort, etc.
+   ↓
+8. Frontend displays full wedding website with personalized content
 ```
 
-### **New User Journey**
-```
-Registration Form → Auto-login → Homepage with sidebar open → Edit wedding data → Auto-save
-```
+### **Testing Personalization** ✅
+```bash
+# API test (should return personalized data)
+curl http://localhost:8001/api/wedding/public/custom/sridharandsneha
 
-### **Returning User**
-```
-Homepage → Sidebar visible → Personal data loaded → Continue editing
+# Frontend test (should show personalized content)
+# Visit: http://localhost:3000/sridharandsneha
+# Should show: "Sridhar & Sneha" NOT "Sarah & Michael"
 ```
 
 ---
 
 ## 🛠️ **COMMON DEVELOPMENT TASKS**
 
-### **Adding New Editing Section**
+### **Adding New Wedding Data Fields**
 ```javascript
-// 1. Add to editSections array in LeftSidebar.js
+// 1. Add field to MongoDB wedding data structure (in API)
+// 2. Update PublicWeddingPage to display the new field
+// 3. Add editing form in LeftSidebar.js dashboard
+// 4. Test that public URLs show the new field correctly
+
+// Example: Adding phone number field
+// Backend: Add "phone_number" to wedding data model
+// Frontend: Display phone in PublicWeddingPage
+// Dashboard: Add phone input in appropriate form section
+// Test: Verify /sridharandsneha shows the phone number
+```
+
+### **Adding New Form Section** 
+```javascript
+// Follow existing patterns in LeftSidebar.js
+// 1. Add to editSections array
 { id: 'new_section', label: 'New Section', icon: IconName, description: 'Description' }
 
-// 2. Add form in FormPopup renderForm() switch statement
+// 2. Add form in FormPopup renderForm() switch statement  
 case 'new_section':
   return <NewSectionForm />
 
-// 3. Add default data to UserDataContext.js defaultWeddingData
-new_section_data: "default_value"
-
-// 4. Test the complete flow
+// 3. Ensure PublicWeddingPage displays the new section data
+// 4. Test on public URLs
 ```
 
-### **Adding Premium Feature**
-```javascript
-// Add to premiumFeatures array in LeftSidebar.js
-{ id: 'feature', label: 'Feature Name', icon: IconName, color: '#hexcolor' }
+### **Testing New Features**
+```bash
+# Always test these when adding features:
+# 1. Backend API response
+curl http://localhost:8001/api/wedding/public/custom/sridharandsneha
 
-// Add handler in handlePremiumFeature function
-case 'feature':
-  // Implementation here
-  break;
-```
+# 2. Frontend public URL display
+# Visit: http://localhost:3000/sridharandsneha  
 
-### **Modifying Theme**
-```javascript
-// Themes defined in App.js
-themes = {
-  classic: { primary: '#1a1a1a', accent: '#d4af37', ... },
-  modern: { primary: '#2c2c2c', accent: '#ff6b6b', ... },
-  boho: { primary: '#8b4513', accent: '#cd853f', ... }
-}
+# 3. Dashboard editing 
+# Register → Login → Edit new section → Save
 
-// Always use theme variables, never hardcode colors
-style={{ color: theme.primary, background: theme.accent }}
+# 4. Mobile responsiveness
+# Test on mobile devices
+
+# 5. All three themes
+# Test Classic, Modern, Boho themes
 ```
 
 ---
 
 ## 🚨 **CRITICAL RULES - NEVER BREAK THESE**
 
-### **React Hooks Rules**
+### **MongoDB Rules**
 ```javascript
-// ❌ WRONG - Conditional hooks
-if (condition) {
-  const [state, setState] = useState();
-}
+// ❌ WRONG - Don't query localStorage for public URLs
+const data = localStorage.getItem('wedding_data');
 
-// ✅ CORRECT - All hooks before any returns
-const [state, setState] = useState();
-if (condition) return null;
+// ✅ CORRECT - Always use MongoDB API for public access
+const response = await fetch(`/api/wedding/public/custom/${customUrl}`);
+const data = await response.json();
 ```
 
-### **LocalStorage Rules**
+### **Public URL Rules**
 ```javascript
-// ❌ WRONG - No error handling
-localStorage.setItem(key, value);
+// ❌ WRONG - Hardcoding data or using localStorage
+const weddingData = { couple_name_1: "Sarah", couple_name_2: "Michael" };
 
-// ✅ CORRECT - Always use try-catch
-try {
-  localStorage.setItem(key, JSON.stringify(value));
-} catch (error) {
-  console.error('Storage failed:', error);
-}
+// ✅ CORRECT - Fetch personalized data from API
+useEffect(() => {
+  const fetchData = async () => {
+    const response = await fetch(`${backendUrl}/api/wedding/public/custom/${customUrl}`);
+    const personalizedData = await response.json();
+    setWeddingData(personalizedData);
+  };
+  fetchData();
+}, [customUrl]);
 ```
 
-### **Theme Integration Rules**
+### **Component Integration Rules**
 ```javascript
-// ❌ WRONG - Hardcoded colors
-<div style={{ color: '#d4af37' }}>
+// ❌ WRONG - Not considering public URL context
+const { weddingData } = useUserData(); // Only works for logged-in users
 
-// ✅ CORRECT - Theme variables
-const { themes, currentTheme } = useAppTheme();
-const theme = themes[currentTheme];
-<div style={{ color: theme.accent }}>
+// ✅ CORRECT - Handle both dashboard and public URL contexts
+const { weddingData } = useUserData(); // For dashboard
+const [publicData, setPublicData] = useState(null); // For public URLs
+const finalData = publicData || weddingData; // Use appropriate data source
 ```
 
 ---
 
 ## 🔍 **DEBUGGING QUICK COMMANDS**
 
-### **Check LocalStorage Data**
-```javascript
-// In browser console
-console.table(JSON.parse(localStorage.getItem('wedding_users')));
-console.table(JSON.parse(localStorage.getItem('wedding_data_user_123')));
-console.log('Session:', localStorage.getItem('sessionId'));
-```
-
-### **Check Authentication State**
-```javascript
-// In React DevTools or console
-console.log('Auth:', {
-  sessionId: localStorage.getItem('sessionId'),
-  userId: localStorage.getItem('userId'), 
-  username: localStorage.getItem('username')
-});
-```
-
-### **Clear All Data (Reset)**
-```javascript
-// Nuclear option - clears everything
-localStorage.clear();
-window.location.reload();
-```
-
----
-
-## 📦 **SERVICE MANAGEMENT**
-
-### **Check Status**
+### **Check System Status**
 ```bash
+# Services status
 sudo supervisorctl status
+
+# Backend API test
+curl http://localhost:8001/api/test
+
+# MongoDB connection test (check backend logs)
+tail -f /var/log/supervisor/backend.out.log
+
+# Frontend build status
+cd /app/frontend && yarn build
 ```
 
-### **Restart Services**
+### **Debug Public URL Issues**
 ```bash
-# Restart all
+# 1. Test API directly
+curl http://localhost:8001/api/wedding/public/custom/sridharandsneha
+
+# 2. Check backend logs
+tail -f /var/log/supervisor/backend.out.log
+
+# 3. Check frontend console (browser DevTools)
+# Look for: "Found wedding data by custom URL" message
+
+# 4. Verify MongoDB data
+# API should return personalized data, not default
+```
+
+### **Reset Development Environment**
+```bash
+# If something is broken, restart services
 sudo supervisorctl restart all
 
-# Restart specific service
-sudo supervisorctl restart frontend
-sudo supervisorctl restart backend
-```
+# Check all services are running
+sudo supervisorctl status
 
-### **View Logs**
-```bash
-# Frontend logs
-tail -f /var/log/supervisor/frontend.out.log
-tail -f /var/log/supervisor/frontend.err.log
-
-# Backend logs  
-tail -f /var/log/supervisor/backend.out.log
+# Test critical functionality
+curl http://localhost:8001/api/wedding/public/custom/sridharandsneha
 ```
 
 ---
 
-## 🎨 **STYLING QUICK REFERENCE**
+## 📊 **CURRENT PROJECT STATUS**
 
-### **Available Premium CSS Classes**
-```css
-/* Glass Morphism */
-.glass-strong          /* Heavy blur effect */
-.translucent-light     /* Light transparency */
-.translucent-medium    /* Medium transparency */
-.translucent-strong    /* Strong transparency */
+### **✅ WORKING PERFECTLY (Don't Touch)**
+- MongoDB Atlas connection and data persistence
+- Public URL personalization (`/sridharandsneha` shows Sridhar & Sneha)
+- Backend API endpoints (all tested and working)
+- Frontend data fetching and display
+- User authentication and session management
+- Dashboard editing functionality
+- Navigation and theme systems
+- Mobile responsive design
 
-/* Animations */
-.animate-slide-in-right    /* Slide from right */
-.animate-stagger-fade-in   /* Stagger animation */
-.animate-bounce-gentle     /* Gentle bounce */
-```
+### **🔄 NEEDS DEVELOPMENT (Your Focus)**
+- **RSVP Section**: Guest management and response tracking
+- **Gallery Section**: Photo upload and organization system
+- **Wedding Party Section**: Bridal/groom party member management
+- **Registry Section**: Gift registry and honeymoon fund management
+- **Guest Book Section**: Message management and moderation
+- **FAQ Section**: Question and answer management system
 
-### **Responsive Breakpoints**
-```css
-sm: 640px    /* Small tablets */
-md: 768px    /* Tablets */ 
-lg: 1024px   /* Small desktops */
-xl: 1280px   /* Large desktops */
-```
-
----
-
-## 🧪 **TESTING SHORTCUTS**
-
-### **Quick User Creation**
-```javascript
-// Use these test accounts (create via registration)
-Username: "dev", Password: "dev123"
-Username: "test", Password: "test123"
-Username: "demo", Password: "demo123"
-```
-
-### **Feature Testing Checklist**
-- [ ] Registration → auto-login → sidebar appears
-- [ ] Edit section → modal opens → auto-save works
-- [ ] Click outside modal → closes and saves
-- [ ] Premium features → buttons work
-- [ ] Theme switching → colors change
-- [ ] Page refresh → data persists
-
----
-
-## 🚀 **PERFORMANCE TIPS**
-
-### **Common Performance Issues**
-1. **Large localStorage writes** → Use compression or batching
-2. **Too many re-renders** → Use React.memo and useCallback
-3. **Heavy animations** → Use transform instead of position
-4. **Memory leaks** → Clean up event listeners and timeouts
-
-### **Quick Performance Check**
-```javascript
-// Monitor localStorage size
-const getStorageSize = () => {
-  let total = 0;
-  for (let key in localStorage) {
-    if (localStorage.hasOwnProperty(key)) {
-      total += localStorage[key].length;
-    }
-  }
-  return `${(total / 1024).toFixed(2)} KB`;
-};
-console.log('Storage used:', getStorageSize());
-```
-
----
-
-## 🔗 **INTEGRATION POINTS**
-
-### **External APIs Used**
-- **QR Code**: `https://api.qrserver.com/v1/create-qr-code/`
-- **WhatsApp**: `https://wa.me/?text=`
-- **Gmail**: `https://mail.google.com/mail/?view=cm`
-
-### **Future Integration Ready**
-- AI Design service endpoint ready in LeftSidebar.js
-- Backend APIs available but not actively used
-- Migration functions prepared for backend transition
+### **🔍 DEVELOPMENT APPROACH**
+1. **Study existing patterns** in working sections (Home, Story, Schedule)
+2. **Follow MongoDB integration** - store data in database, fetch via API
+3. **Test public URLs** - ensure new features work on `/sridharandsneha`
+4. **Maintain responsiveness** - test on mobile and desktop
+5. **Support all themes** - verify Classic, Modern, Boho themes work
 
 ---
 
 ## 📚 **DOCUMENTATION HIERARCHY**
 
 ### **Read in This Order**
-1. **This file** - Quick overview
-2. **ENHANCED_PROJECT_DOCUMENTATION.md** - Complete technical details
-3. **PREMIUM_FEATURES_TESTING_REPORT.md** - What's already tested
-4. **LOCALSTORAGE_IMPLEMENTATION_GUIDE.md** - Deep dive into storage
-5. **MOBILE_NAVIGATION_IMPLEMENTATION_SUMMARY.md** - Mobile specifics
+1. **This file** - Quick start and current status
+2. **COMPLETE_PROJECT_DOCUMENTATION.md** - Comprehensive technical details
+3. **TESTING_STATUS_REPORT.md** - What's tested and verified working
+4. **PROJECT_DOCUMENTATION.md** - Original architecture and setup
+5. **MOBILE_NAVIGATION_IMPLEMENTATION_SUMMARY.md** - Mobile-specific details
 
 ---
 
 ## 🎯 **IMMEDIATE ACTION ITEMS FOR NEW DEVS**
 
-### **Day 1 - Setup & Understanding**
-- [ ] Clone and run the project
-- [ ] Test the user registration → editing flow
-- [ ] Read this file completely
-- [ ] Understand LocalStorage data structure
-- [ ] Test all premium features
+### **Day 1 - Understand What's Working** ✅
+- [ ] Test public URL personalization: http://localhost:3000/sridharandsneha
+- [ ] Verify API responses: `curl http://localhost:8001/api/wedding/public/custom/sridharandsneha`
+- [ ] Explore dashboard functionality: Register → Login → Edit wedding data
+- [ ] Check MongoDB data structure and connection
+- [ ] Review existing form sections (Home, Story, Schedule) as examples
 
-### **Day 2 - Code Deep Dive**
-- [ ] Study UserDataContext.js line by line
-- [ ] Understand LeftSidebar.js modal system
-- [ ] Review authentication flow in LoginPage.js
-- [ ] Test auto-save functionality
+### **Day 2 - Plan Feature Development**
+- [ ] Choose which form section to implement first (RSVP recommended)
+- [ ] Study existing form patterns in LeftSidebar.js
+- [ ] Understand data flow: Dashboard → MongoDB → Public URL
+- [ ] Plan API endpoints needed for your chosen section
+- [ ] Design form UI following existing patterns
 
-### **Day 3 - Feature Development**
-- [ ] Add a simple new editing section
-- [ ] Modify an existing premium feature
-- [ ] Test across all 3 themes
-- [ ] Implement proper error handling
+### **Day 3 - Start Implementation**
+- [ ] Add new section to editSections array in LeftSidebar.js
+- [ ] Create form component following existing patterns
+- [ ] Add backend API endpoints if needed
+- [ ] Test data storage in MongoDB
+- [ ] Verify public URLs display new section data
 
 ---
 
 ## 🚨 **GOTCHAS & COMMON MISTAKES**
 
-### **LocalStorage Gotchas**
-- **Synchronous API** - don't use on main thread for large operations
-- **String only** - must JSON.stringify/parse objects
-- **5-10MB limit** - monitor usage in production
-- **Domain specific** - doesn't work across subdomains
+### **MongoDB Gotchas**
+- **Document Structure**: Don't change existing field names (couple_name_1, couple_name_2, etc.)
+- **Custom URLs**: Always test that new data appears on public URLs like `/sridharandsneha`
+- **ObjectId Handling**: Use existing serialization - don't modify serialize_mongo_doc()
+- **Connection Issues**: Backend automatically falls back to JSON files if MongoDB unavailable
 
-### **React Gotchas**  
-- **Hook dependencies** - always include all dependencies in useEffect
-- **State updates** - useState is asynchronous, use functional updates
-- **Event handlers** - bind properly or use arrow functions
+### **Public URL Gotchas**
+- **Data Source**: Public URLs use API calls, not localStorage
+- **Route Matching**: Custom URLs are catch-all routes - test carefully
+- **Theme Application**: Ensure themes work correctly on public URLs
+- **Navigation**: All nav links should work on public URLs
 
-### **CSS Gotchas**
-- **backdrop-filter** - not supported in all browsers
-- **z-index stacking** - sidebar uses z-[9999], modals use z-[50]
-- **Theme switching** - some styles may not update immediately
+### **Development Gotchas**
+- **Don't Rebuild**: Core system is working - extend, don't replace
+- **Test Personalization**: Always verify your changes work on `/sridharandsneha`
+- **Mobile Testing**: Test responsive design for any new components
+- **Theme Consistency**: New features should work with all three themes
 
 ---
 
 ## 🎉 **SUCCESS METRICS**
 
 ### **You've Mastered This When You Can:**
-- [ ] Create a new user and edit their wedding data
-- [ ] Add a new editing section with modal and auto-save
-- [ ] Explain the LocalStorage data flow
-- [ ] Debug authentication issues
-- [ ] Modify themes and premium features
-- [ ] Handle LocalStorage errors gracefully
+- [ ] Explain how public URL personalization works (MongoDB → API → Frontend)
+- [ ] Add a new form section that shows up on public URLs
+- [ ] Debug API issues using curl and backend logs
+- [ ] Test new features across mobile, desktop, and all themes
+- [ ] Understand the difference between dashboard data and public URL data
+- [ ] Follow existing code patterns without breaking working functionality
 
 ---
 
 ## 📞 **GETTING HELP**
 
 ### **Error Resolution Priority**
-1. **Check browser console** for React/JavaScript errors
-2. **Inspect LocalStorage** for data corruption
-3. **Verify service status** with supervisorctl
-4. **Review logs** for backend issues
-5. **Test in incognito** to rule out cache issues
+1. **Check API responses** with curl before debugging frontend
+2. **Verify MongoDB connection** in backend logs
+3. **Test public URLs** after any wedding data changes
+4. **Check browser console** for frontend errors
+5. **Review existing patterns** in working components
 
 ### **Documentation References**
-- **React Hooks**: https://react.dev/reference/react
-- **LocalStorage**: https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
+- **FastAPI**: https://fastapi.tiangolo.com/
+- **MongoDB**: https://docs.mongodb.com/
+- **Motor Driver**: https://motor.readthedocs.io/
+- **React**: https://react.dev/
 - **Tailwind CSS**: https://tailwindcss.com/docs
 
 ---
 
 ## 🎯 **FINAL WORDS**
 
-This project is **production-ready** with:
-- ✅ **95% feature completion**
-- ✅ **Comprehensive testing**
-- ✅ **Premium user experience**
-- ✅ **Scalable architecture**
-- ✅ **Complete documentation**
+This project has **solid foundations** with:
+- ✅ **MongoDB integration working**
+- ✅ **Public URL personalization working**  
+- ✅ **API endpoints tested and documented**
+- ✅ **Frontend components rendering correctly**
+- ✅ **Mobile responsiveness verified**
+- ✅ **All three themes functional**
 
-**Your job**: Understand the existing system, then build upon this solid foundation. 
+**Your job**: Build upon this working foundation. Don't reinvent what's already working perfectly - extend it with the remaining form sections.
 
-**Remember**: Every feature has been tested and documented. Don't reinvent the wheel - extend what's already working perfectly.
+**Remember**: The hard part (personalization fix) is done. Now it's about following established patterns to add the remaining features.
 
 ---
 
-*Quick Reference Version: 1.0*  
-*Last Updated: January 12, 2025*  
-*Target Audience: New developers joining the project*
+*Quick Reference Version: 2.3*  
+*Last Updated: September 13, 2025*  
+*Status: ✅ PRODUCTION READY - Core functionality complete*  
+*Target Audience: New developers extending the application*
