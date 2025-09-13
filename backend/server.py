@@ -298,7 +298,7 @@ async def login(user_data: UserLogin):
         detail="Incorrect username or password"
     )
 
-# Simple Wedding Data Routes using JSON files
+# Simple Wedding Data Routes using MongoDB
 @api_router.post("/wedding")
 async def create_wedding_data(request_data: dict):
     session_id = request_data.get('session_id')
@@ -308,27 +308,24 @@ async def create_wedding_data(request_data: dict):
             detail="Session ID required"
         )
     
-    current_user = get_current_user_simple(session_id)
-    weddings = load_json_file(WEDDINGS_FILE)
+    user_id = get_current_user_simple(session_id)
+    existing_wedding = await get_wedding_from_db(user_id=user_id)
     
-    # Check if user already has wedding data
-    for wedding_id, wedding_info in weddings.items():
-        if wedding_info.get("user_id") == current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="User already has a wedding card. Use update endpoint instead."
-            )
+    if existing_wedding:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User already has a wedding card. Use update endpoint instead."
+        )
     
     # Remove session_id from the data before creating wedding
     wedding_create_data = {k: v for k, v in request_data.items() if k != 'session_id'}
     
     wedding = WeddingData(
-        user_id=current_user.id,
+        user_id=user_id,
         **wedding_create_data
     )
     
-    weddings[wedding.id] = wedding.dict()
-    save_json_file(WEDDINGS_FILE, weddings)
+    await save_wedding_to_db(wedding.dict())
     return wedding.dict()
 
 @api_router.put("/wedding")
@@ -340,17 +337,10 @@ async def update_wedding_data(request_data: dict):
             detail="Session ID required"
         )
     
-    current_user = get_current_user_simple(session_id)
-    weddings = load_json_file(WEDDINGS_FILE)
+    user_id = get_current_user_simple(session_id)
+    existing_wedding = await get_wedding_from_db(user_id=user_id)
     
-    # Find existing wedding
-    existing_wedding_id = None
-    for wedding_id, wedding_info in weddings.items():
-        if wedding_info.get("user_id") == current_user.id:
-            existing_wedding_id = wedding_id
-            break
-    
-    if not existing_wedding_id:
+    if not existing_wedding:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Wedding data not found"
@@ -359,83 +349,86 @@ async def update_wedding_data(request_data: dict):
     # Remove session_id from the data before updating
     updated_data = {k: v for k, v in request_data.items() if k != 'session_id'}
     updated_data["updated_at"] = datetime.utcnow()
-    updated_data["user_id"] = current_user.id
-    updated_data["id"] = existing_wedding_id
+    updated_data["user_id"] = user_id
+    updated_data["id"] = existing_wedding["id"]
     
-    weddings[existing_wedding_id] = updated_data
-    save_json_file(WEDDINGS_FILE, weddings)
-    
+    await save_wedding_to_db(updated_data)
     return updated_data
 
 @api_router.get("/wedding")
 async def get_wedding_data(session_id: str):
-    current_user = get_current_user_simple(session_id)
-    weddings = load_json_file(WEDDINGS_FILE)
+    user_id = get_current_user_simple(session_id)
+    wedding = await get_wedding_from_db(user_id=user_id)
     
-    for wedding_id, wedding_info in weddings.items():
-        if wedding_info.get("user_id") == current_user.id:
-            return wedding_info
+    if not wedding:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Wedding data not found"
+        )
     
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail="Wedding data not found"
-    )
+    return wedding
 
 @api_router.get("/wedding/public/{wedding_id}")
 async def get_public_wedding_data(wedding_id: str):
-    weddings = load_json_file(WEDDINGS_FILE)
+    wedding = await get_wedding_from_db(wedding_id=wedding_id)
     
-    if wedding_id not in weddings:
+    if not wedding:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Wedding not found"
         )
     
-    wedding = weddings[wedding_id]
     # Remove sensitive data for public access
     public_data = {k: v for k, v in wedding.items() if k not in ["user_id"]}
     return public_data
 
 @api_router.get("/wedding/public/custom/{custom_url}")
 async def get_public_wedding_by_custom_url(custom_url: str):
-    weddings = load_json_file(WEDDINGS_FILE)
+    print(f"🔍 Searching for wedding with custom URL: {custom_url}")
+    wedding = await get_wedding_from_db(custom_url=custom_url)
     
-    # Search for wedding data by custom URL
-    for wedding_id, wedding_info in weddings.items():
-        if wedding_info.get("custom_url") == custom_url:
-            # Remove sensitive data for public access
-            public_data = {k: v for k, v in wedding_info.items() if k not in ["user_id"]}
-            return public_data
+    if not wedding:
+        print(f"❌ No wedding found with custom URL: {custom_url}")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Wedding not found with this custom URL"
+        )
     
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail="Wedding not found with this custom URL"
-    )
+    print(f"✅ Found wedding for custom URL: {custom_url}")
+    # Remove sensitive data for public access
+    public_data = {k: v for k, v in wedding.items() if k not in ["user_id"]}
+    return public_data
 
 @api_router.get("/wedding/public/user/{user_id}")
 async def get_public_wedding_by_user_id(user_id: str):
-    weddings = load_json_file(WEDDINGS_FILE)
+    wedding = await get_wedding_from_db(user_id=user_id)
     
-    # Search for wedding data by user ID
-    for wedding_id, wedding_info in weddings.items():
-        if wedding_info.get("user_id") == user_id:
-            # Remove sensitive data for public access
-            public_data = {k: v for k, v in wedding_info.items() if k not in ["user_id"]}
-            return public_data
+    if not wedding:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Wedding not found for this user"
+        )
     
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail="Wedding not found for this user"
-    )
+    # Remove sensitive data for public access
+    public_data = {k: v for k, v in wedding.items() if k not in ["user_id"]}
+    return public_data
 
 # Get user profile - Simple version
 @api_router.get("/profile")
 async def get_profile(session_id: str):
-    current_user = get_current_user_simple(session_id)
+    user_id = get_current_user_simple(session_id)
+    user_data = await get_user_from_db(user_id)
+    
+    if not user_data:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
     return {
-        "id": current_user.id,
-        "username": current_user.username,
-        "created_at": current_user.created_at
+        "id": user_data["id"],
+        "username": user_data["username"],
+        "created_at": user_data["created_at"]
     }
 
 # Test endpoint to verify connectivity
