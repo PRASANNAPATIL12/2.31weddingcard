@@ -36,6 +36,120 @@ api_router = APIRouter(prefix="/api")
 # Simple session storage (in production, use Redis or similar)
 active_sessions = {}
 
+# MongoDB connection functions
+async def connect_to_mongo():
+    global client, db
+    try:
+        client = AsyncIOMotorClient(MONGO_URL)
+        db = client[DB_NAME]
+        # Test the connection
+        await client.admin.command('ping')
+        print(f"✅ Connected to MongoDB: {DB_NAME}")
+        return True
+    except Exception as e:
+        print(f"❌ Failed to connect to MongoDB: {e}")
+        print("📋 Falling back to JSON file storage")
+        return False
+
+async def close_mongo_connection():
+    global client
+    if client:
+        client.close()
+
+# Database helper functions
+async def get_user_from_db(user_id: str):
+    if db:
+        try:
+            user = await db.users.find_one({"id": user_id})
+            return user
+        except:
+            pass
+    
+    # Fallback to JSON
+    users = load_json_file(USERS_FILE)
+    return users.get(user_id)
+
+async def save_user_to_db(user_data: dict):
+    if db:
+        try:
+            await db.users.replace_one(
+                {"id": user_data["id"]}, 
+                user_data, 
+                upsert=True
+            )
+            return True
+        except Exception as e:
+            print(f"Failed to save user to MongoDB: {e}")
+    
+    # Fallback to JSON
+    users = load_json_file(USERS_FILE)
+    users[user_data["id"]] = user_data
+    save_json_file(USERS_FILE, users)
+    return True
+
+async def get_wedding_from_db(wedding_id: str = None, user_id: str = None, custom_url: str = None):
+    if db:
+        try:
+            query = {}
+            if wedding_id:
+                query["id"] = wedding_id
+            elif user_id:
+                query["user_id"] = user_id
+            elif custom_url:
+                query["custom_url"] = custom_url
+            
+            wedding = await db.weddings.find_one(query)
+            return wedding
+        except Exception as e:
+            print(f"Failed to get wedding from MongoDB: {e}")
+    
+    # Fallback to JSON
+    weddings = load_json_file(WEDDINGS_FILE)
+    
+    if wedding_id:
+        return weddings.get(wedding_id)
+    elif user_id:
+        for w_id, w_data in weddings.items():
+            if w_data.get("user_id") == user_id:
+                return w_data
+    elif custom_url:
+        for w_id, w_data in weddings.items():
+            if w_data.get("custom_url") == custom_url:
+                return w_data
+    
+    return None
+
+async def save_wedding_to_db(wedding_data: dict):
+    if db:
+        try:
+            await db.weddings.replace_one(
+                {"id": wedding_data["id"]}, 
+                wedding_data, 
+                upsert=True
+            )
+            return True
+        except Exception as e:
+            print(f"Failed to save wedding to MongoDB: {e}")
+    
+    # Fallback to JSON
+    weddings = load_json_file(WEDDINGS_FILE)
+    weddings[wedding_data["id"]] = wedding_data
+    save_json_file(WEDDINGS_FILE, weddings)
+    return True
+
+async def get_all_users_from_db():
+    if db:
+        try:
+            users = {}
+            async for user in db.users.find():
+                users[user["id"]] = user
+            return users
+        except:
+            pass
+    
+    # Fallback to JSON
+    return load_json_file(USERS_FILE)
+
 # Models
 class UserRegister(BaseModel):
     username: str
