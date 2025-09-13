@@ -9,11 +9,21 @@ from typing import List, Optional
 import uuid
 from datetime import datetime
 import json
+from motor.motor_asyncio import AsyncIOMotorClient
+import asyncio
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# JSON file for simple user storage
+# MongoDB setup
+MONGO_URL = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
+DB_NAME = os.getenv('DB_NAME', 'weddingcard')
+
+# MongoDB client
+client = None
+db = None
+
+# JSON file for fallback storage
 USERS_FILE = ROOT_DIR / 'users.json'
 WEDDINGS_FILE = ROOT_DIR / 'weddings.json'
 
